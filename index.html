@@ -210,11 +210,15 @@
       transition: color 0.2s ease;
     }
 
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); }
+
+    .nav-links a.active {
+      text-shadow: 0 0 14px rgba(139, 92, 246, 0.55);
+    }
 
     .discord-btn,
     .hero-actions .primary,
-    .hero-actions .secondary,
     .pricing-btn,
     .hwid-btn {
       display: inline-flex;
@@ -236,7 +240,6 @@
 
     .discord-btn:hover,
     .hero-actions .primary:hover,
-    .hero-actions .secondary:hover,
     .pricing-btn:hover,
     .hwid-btn:hover {
       transform: translateY(-2px);
@@ -305,7 +308,45 @@
       justify-content: center;
       gap: 0.85rem;
       flex-wrap: wrap;
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-code {
+      margin: 0 auto 2rem;
+      width: min(820px, 95vw);
+      background: rgba(26, 26, 46, 0.9);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 14px;
+      padding: 0.85rem;
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .hero-code code {
+      color: #d7d7e3;
+      overflow: auto;
+      white-space: nowrap;
+      font-size: 0.9rem;
+      width: 100%;
+      scrollbar-width: thin;
+    }
+
+    .copy-btn {
+      flex: 0 0 auto;
+      border: 1px solid rgba(6, 182, 212, 0.6);
+      background: rgba(6, 182, 212, 0.12);
+      color: var(--secondary);
+      border-radius: 10px;
+      font-weight: 700;
+      padding: 0.55rem 0.8rem;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background: rgba(6, 182, 212, 0.22);
     }
 
     .hero-actions .primary {
@@ -313,13 +354,6 @@
       color: #fff;
       padding: 0.85rem 1.25rem;
       box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
-    }
-
-    .hero-actions .secondary {
-      background: rgba(6, 182, 212, 0.15);
-      border: 1px solid rgba(6, 182, 212, 0.5);
-      color: var(--secondary);
-      padding: 0.85rem 1.25rem;
     }
 
     .hero-stats {
@@ -695,6 +729,8 @@
       .nav-links.show { display: flex; }
       .nav-links a { padding: 0.6rem 0.4rem; }
       .discord-btn { justify-content: center; }
+      .hero-code { flex-direction: column; align-items: stretch; }
+      .copy-btn { width: 100%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -753,7 +789,11 @@
 
       <div class="hero-actions reveal">
         <a class="primary" href="#pricing" target="_self"><i class="fas fa-rocket" aria-hidden="true"></i> Get Started</a>
-        <a class="secondary" href="https://pandadevelopment.net" rel="noopener"><i class="fas fa-key" aria-hidden="true"></i> Get Free Key</a>
+      </div>
+
+      <div class="hero-code reveal" aria-label="Loadstring snippet">
+        <code id="loadstringCode">loadstring(game:HttpGet("https://nebulahub.dev/loader"))()</code>
+        <button class="copy-btn" id="copyLoadstringBtn" type="button"><i class="fas fa-copy" aria-hidden="true"></i> Copy</button>
       </div>
 
       <div class="hero-stats reveal" aria-label="Site statistics">
@@ -767,41 +807,41 @@
       <h2 class="section-title">Frequently Asked Questions</h2>
       <div class="faq-container">
         <article class="faq-item">
-          <button class="faq-question" aria-expanded="false">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a1" id="faq-q1">
             <span>How do I use NebulaHub?</span>
             <i class="fas fa-chevron-down" aria-hidden="true"></i>
           </button>
-          <div class="faq-answer">
+          <div class="faq-answer" id="faq-a1" role="region" aria-labelledby="faq-q1">
             <p>Copy the loadstring and paste it into your Roblox executor. Use a valid key (free or premium) to unlock features.</p>
           </div>
         </article>
 
         <article class="faq-item">
-          <button class="faq-question" aria-expanded="false">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a2" id="faq-q2">
             <span>Is NebulaHub regularly updated?</span>
             <i class="fas fa-chevron-down" aria-hidden="true"></i>
           </button>
-          <div class="faq-answer">
+          <div class="faq-answer" id="faq-a2" role="region" aria-labelledby="faq-q2">
             <p>Yes. NebulaHub receives frequent compatibility and quality updates to keep features stable and improve reliability.</p>
           </div>
         </article>
 
         <article class="faq-item">
-          <button class="faq-question" aria-expanded="false">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a3" id="faq-q3">
             <span>What games are supported?</span>
             <i class="fas fa-chevron-down" aria-hidden="true"></i>
           </button>
-          <div class="faq-answer">
+          <div class="faq-answer" id="faq-a3" role="region" aria-labelledby="faq-q3">
             <p>We cover popular titles such as Blox Fruits, King Legacy, Anime Adventures, and more as support expands.</p>
           </div>
         </article>
 
         <article class="faq-item">
-          <button class="faq-question" aria-expanded="false">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a4" id="faq-q4">
             <span>What do I get with the lifetime key?</span>
             <i class="fas fa-chevron-down" aria-hidden="true"></i>
           </button>
-          <div class="faq-answer">
+          <div class="faq-answer" id="faq-a4" role="region" aria-labelledby="faq-q4">
             <p>Lifetime gives you premium features, priority support, faster updates, and a more streamlined experience.</p>
           </div>
         </article>
@@ -945,21 +985,31 @@
 
     const menuToggle = document.getElementById("menuToggle");
     const navLinks = document.getElementById("navLinks");
+    const menuIcon = menuToggle.querySelector("i");
+
+    function setMenuState(isOpen) {
+      navLinks.classList.toggle("show", isOpen);
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuIcon.classList.toggle("fa-bars", !isOpen);
+      menuIcon.classList.toggle("fa-times", isOpen);
+    }
 
     menuToggle.addEventListener("click", () => {
-      const isOpen = navLinks.classList.toggle("show");
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
-      menuToggle.innerHTML = isOpen
-        ? '<i class="fas fa-times" aria-hidden="true"></i>'
-        : '<i class="fas fa-bars" aria-hidden="true"></i>';
+      setMenuState(!navLinks.classList.contains("show"));
     });
 
     document.querySelectorAll('.nav-links a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", () => {
-        navLinks.classList.remove("show");
-        menuToggle.setAttribute("aria-expanded", "false");
-        menuToggle.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
-      });
+      anchor.addEventListener("click", () => setMenuState(false));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setMenuState(false);
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+        setMenuState(false);
+      }
     });
 
     document.querySelectorAll(".faq-question").forEach((button) => {
@@ -990,12 +1040,41 @@
       showToast("Redirecting to free key system...");
     });
 
+    document.getElementById("copyLoadstringBtn").addEventListener("click", async () => {
+      const text = document.getElementById("loadstringCode").textContent.trim();
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Loadstring copied to clipboard.");
+      } catch (error) {
+        showToast("Copy failed. Please copy manually.");
+      }
+    });
+
     const nav = document.querySelector(".site-nav");
+    const sectionIds = ["faq", "testimonials", "pricing"];
+    const navHashLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+
+    function updateActiveLink() {
+      const y = window.scrollY + 120;
+      let current = "";
+      for (const id of sectionIds) {
+        const section = document.getElementById(id);
+        if (section && y >= section.offsetTop) current = id;
+      }
+      navHashLinks.forEach((link) => {
+        const isActive = link.getAttribute("href") === `#${current}`;
+        link.classList.toggle("active", isActive);
+      });
+    }
+
     window.addEventListener("scroll", () => {
       nav.style.background = window.scrollY > 40
         ? "rgba(15, 15, 26, 0.95)"
         : "rgba(15, 15, 26, 0.78)";
+      updateActiveLink();
     });
+
+    updateActiveLink();
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
