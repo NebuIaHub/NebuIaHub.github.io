@@ -136,6 +136,10 @@
       gap:10px;
     }
     .submit-btn:active{transform: translateY(1px)}
+    .submit-btn:disabled{
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     .hidden{display:none}
 
@@ -272,9 +276,16 @@
   </div>
 
   <script>
+    // ============================================
+    // CONFIGURATION - Replace with your real API
+    // ============================================
+    const API_ENDPOINT = "https://your-backend.com/api/reset-hwid";
+    const USE_DEMO_MODE = true; // Set to false when you have a real backend
+    
     const form = document.getElementById("resetForm");
     const keyInput = document.getElementById("key");
     const togglePassword = document.getElementById("togglePassword");
+    const submitBtn = document.getElementById("submitBtn");
     const statusContainer = document.getElementById("statusContainer");
     const statusMessage = document.getElementById("statusMessage");
     const statusDetails = document.getElementById("statusDetails");
@@ -309,31 +320,61 @@
         return;
       }
 
+      // Disable submit button during request
+      submitBtn.disabled = true;
       showStatus("info", "Processing...", "Contacting NebulaHub servers...");
 
       try {
-        // IMPORTANT:
-        // GitHub Pages is STATIC. This demo just fakes success.
-        // To make it real, replace the fetch URL with YOUR backend endpoint.
-        
-        // Example real call:
-        // const res = await fetch("https://YOUR-API/reset-hwid", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({ key })
-        // });
-        // const data = await res.json();
-        // if (!data.ok) throw new Error(data.reason || "Reset failed");
-        
-        await new Promise(r => setTimeout(r, 900)); // fake delay
-        
-        // Fake success:
-        statusContainer.classList.add("hidden");
-        successMessage.classList.remove("hidden");
-        keyInput.value = "";
-        keyInput.type = "password";
-      } catch (err){
-        showStatus("error", "Reset failed", String(err.message || err));
+        if (USE_DEMO_MODE) {
+          // ============================================
+          // DEMO MODE - Simulates responses
+          // ============================================
+          await new Promise(r => setTimeout(r, 1200));
+          
+          // Simulate different responses based on key
+          if (key === "VALID-KEY-123") {
+            // Success
+            statusContainer.classList.add("hidden");
+            successMessage.classList.remove("hidden");
+            keyInput.value = "";
+            keyInput.type = "password";
+          } else if (key === "EXPIRED-KEY") {
+            throw new Error("Key has expired");
+          } else if (key === "INACTIVE-KEY") {
+            throw new Error("Key is not active");
+          } else if (key === "ALREADY-RESET") {
+            throw new Error("HWID was recently reset. Please wait 24 hours.");
+          } else {
+            throw new Error("Invalid key");
+          }
+        } else {
+          // ============================================
+          // REAL MODE - Makes actual API call
+          // ============================================
+          const response = await fetch(API_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ key: key })
+          });
+
+          const data = await response.json();
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.message || data.error || "Reset failed");
+          }
+
+          // Success
+          statusContainer.classList.add("hidden");
+          successMessage.classList.remove("hidden");
+          keyInput.value = "";
+          keyInput.type = "password";
+        }
+      } catch (err) {
+        showStatus("error", "Reset Failed", err.message || "An error occurred");
+      } finally {
+        submitBtn.disabled = false;
       }
     });
 
